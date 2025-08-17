@@ -1,0 +1,97 @@
+const fs = require('fs');
+const path = require('path');
+
+// Define all environment variables
+const envVars = `APP_NAME=TravelAgency
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
+LOG_CHANNEL=stack
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=travel_agency
+DB_USERNAME=root
+DB_PASSWORD=
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+MEMCACHED_HOST=127.0.0.1
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="\${APP_NAME}"
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=
+AWS_USE_PATH_STYLE_ENDPOINT=false
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_HOST=
+PUSHER_PORT=443
+PUSHER_SCHEME=https
+PUSHER_APP_CLUSTER=mt1
+VITE_APP_NAME="\${APP_NAME}"
+VITE_PUSHER_APP_KEY="\${PUSHER_APP_KEY}"
+VITE_PUSHER_HOST="\${PUSHER_HOST}"
+VITE_PUSHER_PORT="\${PUSHER_PORT}"
+VITE_PUSHER_SCHEME="\${PUSHER_SCHEME}"
+VITE_PUSHER_APP_CLUSTER="\${PUSHER_APP_CLUSTER}"
+
+# Firebase Configuration
+VITE_FIREBASE_API_KEY=AIzaSyAFboEkUavDgKPrTB13zpo5Fkm4ZtXGVh8
+VITE_FIREBASE_AUTH_DOMAIN=traveler-agency-795f4.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=traveler-agency-795f4
+VITE_FIREBASE_STORAGE_BUCKET=traveler-agency-795f4.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=169452632839
+VITE_FIREBASE_APP_ID=1:169452632839:web:989c7d7c2fcf71875663a2
+VITE_FIREBASE_MEASUREMENT_ID=G-6L14RW53Y9
+
+# JWT Configuration for API Authentication
+JWT_SECRET=travel_agency_jwt_secret_key
+JWT_EXPIRES_IN=7d
+
+# Port Configuration
+PORT=5000`;
+
+// Firebase service account details
+const firebaseCredentials = {
+  privateKey: "-----BEGIN PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCo7DI3kZVEXgm3\\nGse6145JysXNpMTdvnY9l8eUuLO9r2lgAss/tH14eak3PiR6orMGujcwl1tVxZ/t\\nWe0z1zSaniM+zcO2gne4FVRATBJEVsXf7WplGFQ8+tqYlpwte2fcbUsfNANAGyqL\\nhI1tN5rJI6n///Z5TgVZOFfrPbWw/byCtEd8MG10hsgbCqN3RyqAAuAylatkvazZ\\nTslLisXoB4/AzHJozWpcYz9GwQ7hreeX8eLcOI0rHUd7sWx8CujXG8EcNKROgCPh\\nE/30see8tMFFUN5dT4hHFyMbGkfgAe+wLYeKmFnv17b7kSyxO52lj2Ug/oY6//eH\\nJ7+v0Q3LAgMBAAECggEAO2tiOrPGKtddWYBdE3cxgPmH3M+BxHJzyzSxqrnR1/50\\n9aXl8tG9dPxurpT4Zf8HNG2abkg/g4tRtz7ztlGUGnNX+IaOuotoK2OtUDSyFEHl\\ntuAfldIaB51B+Xy5ETKglSQI0cANCKbFr3AAA5QUqX4XFYrnG0J7lSfBnWkGmWwF\\na64u+tMMW6YECmkCnzOV0NVN4EufNh4k0NVd4IkSqVmhU+jtv8c/o/WDdAqUFEki\\n9A+QwrpiHY1uzkK/bxAsiNTuE9HkKxUOxL2Qf2XiRrhaT4c2pgPbDJvx5WqP7/mb\\nbq+oe/wpLaccBzFVzc5X1CJMFyE14cAPWXpbFpqemQKBgQDTHfLyV7OYgouB3Sx0\\nZkFp08jWx0lLn/GUCcgX3/6rFEMEuTEkNahr9VJ+XumjCR9Si6irCh2kTjG7O4UN\\nBUqo2uBAWLbsMS8cRH91hYJNfcdu1xG5HEzfAsN7VtOKYStl6haMPjrazLCGSk3l\\nlWHMR8/8Ge3meB0m1WXkkZ7MZQKBgQDM1dFqip5a9j3cy+MgCg6z8/whaPjN9DMs\\nPo+8UKbjMscObWbk9mD6PGj3QffS6VhX75MAKPRa90m8NG3qxriooE0mS5TRQZUa\\npchNFE+OBhXgZXT3/8k56dg1UO+yTpIBcowJMcXnDvvGF/qE0/TZ4NmgVgoMxFG1\\nA96n1hLWbwKBgQCI3XaeI7s72Q4GP9PNFmm76N/gVcwvqd5cocbFq6KXWIhmLIUu\\nO1cXvjAf2vpOhuB2jDHpyKIU3dih0GFeYprXQyZ0sM7N6sjm44VaNBaYlD1Rnz5P\\nKoivX0RJ1q1Hnd0bshmyC7nuFRsvxEYh26lOXRP6FPlFG4OSpG/tMXaofQKBgG0j\\nlCRHXZ6ry0Rk4kyE71aUroeCrebWsZlmcCFve6xcttEKG6PtXriWDXuJC6m2KRsZ\\njGKub5w0XHZKHTLV1TgLyW+ZH97rKa38HSBsrQLIXUml5U/qWuZfoZKu4DhKQuNA\\njDqt6Xt2cVIYHqQ9Zx3b/zi9/zbUN5DSUgVtO7ZDAoGABSn76CJ1UfId1kNtZC3b\\nLqeUvdZMLEVRbJxMZ39TGhyfr827Ope6jnw375Emjx4aLQo8rzrEKywGd0RYtQAf\\nD5GnbxejxxKhXX8A5AhkEGBawpaDl/sR9XXh3ntw6qpsmuFK8jScWY0P0JK8kXky\\n23JtqdHe2s+CVAj3NAA8J1o=\\n-----END PRIVATE KEY-----\\n",
+  clientEmail: "firebase-adminsdk-fbsvc@traveler-agency-795f4.iam.gserviceaccount.com",
+  projectId: "traveler-agency-795f4"
+};
+
+// Path to the .env file
+const envPath = path.join(__dirname, '.env');
+
+try {
+  // Create new .env content with all variables
+  let finalEnvContent = envVars;
+  
+  // Add Firebase service account details
+  finalEnvContent += '\n\n# Firebase Service Account\n';
+  finalEnvContent += `FIREBASE_PRIVATE_KEY="${firebaseCredentials.privateKey}"\n`;
+  finalEnvContent += `FIREBASE_CLIENT_EMAIL="${firebaseCredentials.clientEmail}"\n`;
+  finalEnvContent += `FIREBASE_PROJECT_ID="${firebaseCredentials.projectId}"`;
+
+  // Write to .env file, overwriting any existing content
+  fs.writeFileSync(envPath, finalEnvContent);
+  console.log('Successfully updated .env file with all environment variables and Firebase service account credentials');
+} catch (error) {
+  console.error('Error updating .env file:', error);
+} 

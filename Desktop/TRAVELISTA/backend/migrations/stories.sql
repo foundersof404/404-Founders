@@ -1,0 +1,20 @@
+-- Create stories table
+CREATE TABLE IF NOT EXISTS stories (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  media_url VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  expires_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP + INTERVAL 24 HOUR),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Create story views table
+CREATE TABLE IF NOT EXISTS story_views (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  story_id INT NOT NULL,
+  user_id INT NOT NULL,
+  viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (story_id) REFERENCES stories(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE KEY unique_view (story_id, user_id)
+); 

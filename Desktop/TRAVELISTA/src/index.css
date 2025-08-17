@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 214 57% 51%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 214 57% 51%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 214 57% 51%;
+
+    --primary: 214 57% 51%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 214 57% 51%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 214 57% 51%;
+    --muted-foreground: 0 0% 100%;
+
+    --accent: 214 57% 51%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 57% 51%;
+    --input: 214 57% 51%;
+    --ring: 214 57% 51%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 214 57% 51%;
+    --foreground: 0 0% 100%;
+
+    --card: 214 57% 51%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 214 57% 51%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 0 0% 100%;
+    --primary-foreground: 214 57% 51%;
+
+    --secondary: 214 57% 51%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 214 57% 51%;
+    --muted-foreground: 0 0% 100%;
+
+    --accent: 214 57% 51%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 57% 51%;
+    --input: 214 57% 51%;
+    --ring: 214 57% 51%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    cursor: url(https://cur.cursors-4u.net/mechanics/mec-4/mec302.cur), auto !important;
+  }
+
+  /* Interactive elements hover cursor */
+  a:hover,
+  button:hover,
+  [role="button"]:hover,
+  .btn-primary:hover,
+  .btn-outline:hover,
+  .btn-google:hover,
+  .profile-menu-item:hover,
+  input:hover,
+  textarea:hover,
+  select:hover {
+    cursor: url(https://cur.cursors-4u.net/mechanics/mec-3/mec292.cur), auto !important;
+  }
+}
+
+/* Custom Styles */
+@layer components {
+  .form-input-wrapper {
+    @apply relative w-full mb-4;
+  }
+  
+  .form-input {
+    @apply w-full py-3 px-4 rounded-md border border-input bg-background text-foreground shadow-sm transition-all duration-200
+    focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50;
+  }
+  
+  .form-label {
+    @apply text-sm font-medium text-muted-foreground mb-1.5 block;
+  }
+  
+  .btn-primary {
+    @apply w-full bg-primary text-primary-foreground font-medium rounded-md py-3 px-4 
+    transition-all duration-200 hover:bg-primary/90 
+    focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50;
+  }
+  
+  .btn-outline {
+    @apply w-full bg-transparent border border-input text-foreground font-medium rounded-md py-3 px-4 
+    transition-all duration-200 hover:bg-secondary/50
+    focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50;
+  }
+
+  .btn-google {
+    @apply w-full bg-white text-gray-800 border border-gray-300 font-medium rounded-md py-3 px-4 flex items-center justify-center gap-2
+    transition-all duration-200 hover:bg-gray-50
+    focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50;
+  }
+  
+  .card-glass {
+    @apply bg-white/90 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg;
+  }
+  
+  .divider-text {
+    @apply relative text-center my-4;
+  }
+  
+  .divider-text::before,
+  .divider-text::after {
+    @apply content-[''] absolute top-1/2 w-[calc(50%-1rem)] h-px bg-border;
+  }
+  
+  .divider-text::before {
+    @apply left-0;
+  }
+  
+  .divider-text::after {
+    @apply right-0;
+  }
+  
+  .profile-menu-item {
+    @apply flex items-center gap-2 py-2.5 px-3 text-foreground/80 hover:bg-secondary rounded-md transition-all duration-200;
+  }
+  
+  .profile-menu-item.active {
+    @apply bg-secondary text-foreground font-medium;
+  }
+}
